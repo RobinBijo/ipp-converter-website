@@ -1,0 +1,351 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prefix-Infix-Postfix Converter Website</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(14px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position the tooltip above the text */
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .dark-theme {
+            background-color: black;
+            color: white;
+        }
+
+        .dark-theme input,
+        .dark-theme select,
+        .dark-theme textarea {
+            background-color: black;
+            color: white;
+            border: 1px solid white;
+        }
+
+        .dark-theme input::placeholder,
+        .dark-theme textarea::placeholder {
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        const languages = [
+            { code: 'en', name: 'English' },
+            { code: 'es', name: 'Spanish' },
+            { code: 'fr', name: 'French' },
+            { code: 'de', name: 'German' },
+            { code: 'zh', name: 'Chinese' },
+            { code: 'ja', name: 'Japanese' },
+            { code: 'hi', name: 'Hindi' },
+            // Add more languages as needed
+        ];
+
+        const translations = {
+            en: {
+                title: 'Prefix-Infix-Postfix Converter Website',
+                version: 'v.1.0.0',
+                settings: 'Settings',
+                sourceCode: 'Source Code Version',
+                supportUs: 'Support Us',
+                languages: 'Languages',
+                developers: 'Developers',
+                download: 'DOWNLOAD TERMINAL VERSION (DISABLED)',
+                convertFrom: 'CONVERT FROM',
+                to: 'TO',
+                enterExpression: 'Enter Your Expression as a string',
+                convert: 'CONVERT',
+                output: 'OUTPUT:',
+                additionalSettings: 'Additional settings',
+                exponentSymbol: '^ is the exponent symbol',
+                usePriority: 'Use priority (conventional)',
+                aboutDeveloper: 'ABOUT THE DEVELOPER',
+                developerInfo: 'Robin Bijo is a student of VIT',
+                close: 'CLOSE',
+                darkTheme: 'Dark Theme',
+                highContrast: 'High Contrast',
+                currentCodeVersion: 'Current Code Version: ',
+                openGithub: 'Open Github',
+                supportEasy: 'Supporting is really easy!',
+                supportText: 'You only need to contribute a maximum of 25 USD (or an equivalent of it in your native currency) and you will help keep this app running',
+                supportPatreon: 'Support on Patreon',
+            },
+            // Add more translations as needed
+        };
+
+        function App() {
+            const [menuOpen, setMenuOpen] = useState(false);
+            const [developerDialogOpen, setDeveloperDialogOpen] = useState(false);
+            const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+            const [sourceCodeDialogOpen, setSourceCodeDialogOpen] = useState(false);
+            const [languagesDialogOpen, setLanguagesDialogOpen] = useState(false);
+            const [supportDialogOpen, setSupportDialogOpen] = useState(false);
+            const [theme, setTheme] = useState('light');
+            const [highContrast, setHighContrast] = useState(false);
+            const [language, setLanguage] = useState('en');
+            const [convertFrom, setConvertFrom] = useState('INFIX');
+            const [convertTo, setConvertTo] = useState('POSTFIX');
+            const [expression, setExpression] = useState('');
+            const [output, setOutput] = useState('');
+            const [usePriority, setUsePriority] = useState(false);
+            const [useExponent, setUseExponent] = useState(false);
+
+            const handleConvert = () => {
+                // Conversion logic here
+                setOutput('Converted Expression');
+            };
+
+            const toggleTheme = () => {
+                setTheme(theme === 'light' ? 'dark' : 'light');
+            };
+
+            const toggleHighContrast = () => {
+                setHighContrast(!highContrast);
+            };
+
+            const changeLanguage = (code) => {
+                setLanguage(code);
+            };
+
+            const t = translations[language];
+
+            return (
+                <div className={`container mx-auto p-4 ${theme === 'dark' ? 'dark-theme' : ''} ${highContrast ? 'contrast-200' : ''}`}>
+                    <header className="flex justify-between items-center bg-white p-4 shadow-md">
+                        <div className="flex items-center">
+                            <button onClick={() => setMenuOpen(!menuOpen)} className="mr-4">
+                                <i className={`fas fa-bars ${theme === 'dark' ? 'text-white' : 'text-black'}`}></i>
+                            </button>
+                            <h1 className="text-xl font-bold">{t.title}</h1>
+                        </div>
+                        <span className="text-gray-500">{t.version}</span>
+                    </header>
+
+                    {menuOpen && (
+                        <div className="absolute top-16 left-0 bg-white shadow-md p-4 w-64 h-96">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-bold">{t.title}</h2>
+                                <button onClick={() => setMenuOpen(false)} className="text-gray-500">
+                                    <i className={`fas fa-times ${theme === 'dark' ? 'text-white' : 'text-black'}`}></i>
+                                </button>
+                            </div>
+                            <ul>
+                                <li className="mb-2"><a href="#" className="text-blue-500" onClick={() => setSettingsDialogOpen(true)}>{t.settings}</a></li>
+                                <li className="mb-2"><a href="#" className="text-blue-500" onClick={() => setSourceCodeDialogOpen(true)}>{t.sourceCode}</a></li>
+                                <li className="mb-2"><a href="#" className="text-blue-500" onClick={() => setSupportDialogOpen(true)}>{t.supportUs} <i className="fas fa-donate"></i></a></li>
+                                <li className="mb-2"><a href="#" className="text-blue-500" onClick={() => setLanguagesDialogOpen(true)}>{t.languages} <span className="text-xs text-gray-500">BETA</span></a></li>
+                                <li className="mb-2"><a href="#" className="text-blue-500" onClick={() => setDeveloperDialogOpen(true)}>{t.developers}</a></li>
+                                <li className="mt-4 tooltip">
+                                    <a href="#" className="text-blue-500 bg-gray-200 p-4 rounded block text-center cursor-not-allowed">{t.download}</a>
+                                    <span className="tooltiptext">Unavailable currently</span>
+                                </li>
+                            </ul>
+                        </div>
+                    )}
+
+                    {developerDialogOpen && (
+                        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-8 rounded shadow-md w-96">
+                                <img src="https://placehold.co/256x256" alt="Placeholder for developer image" className="mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-center mb-2">{t.aboutDeveloper}</h3>
+                                <h5 className="text-center mb-4">{t.developerInfo}</h5>
+                                <button onClick={() => setDeveloperDialogOpen(false)} className="bg-red-500 text-white p-2 rounded block mx-auto">{t.close}</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {settingsDialogOpen && (
+                        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-8 rounded shadow-md w-96">
+                                <h3 className="text-xl font-bold text-center mb-4">{t.settings}</h3>
+                                <div className="flex justify-between items-center mb-4">
+                                    <span>{t.darkTheme}</span>
+                                    <label className="switch">
+                                        <input type="checkbox" onChange={toggleTheme} checked={theme === 'dark'} />
+                                        <span className="slider round"></span>
+                                    </label>
+                                </div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <span>{t.highContrast} <span className="text-xs text-gray-500">BETA</span></span>
+                                    <label className="switch">
+                                        <input type="checkbox" onChange={toggleHighContrast} checked={highContrast} />
+                                        <span className="slider round"></span>
+                                    </label>
+                                </div>
+                                <div className="mt-4">
+                                    <h3 className="text-lg font-bold">{t.additionalSettings}</h3>
+                                    <label className="flex items-center mb-2">
+                                        <input type="checkbox" checked={useExponent} onChange={() => setUseExponent(!useExponent)} className="mr-2" />
+                                        {t.exponentSymbol}
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input type="checkbox" checked={usePriority} onChange={() => setUsePriority(!usePriority)} className="mr-2" />
+                                        {t.usePriority}
+                                        <div className="tooltip ml-2">
+                                            <i className="fas fa-info-circle"></i>
+                                            <span className="tooltiptext">The order of the operations to be followed</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div className="h-32"></div>
+                                <button onClick={() => setSettingsDialogOpen(false)} className="bg-red-500 text-white p-2 rounded block mx-auto">{t.close}</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {sourceCodeDialogOpen && (
+                        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-8 rounded shadow-md w-96">
+                                <h3 className="text-xl font-bold text-center mb-4">{t.sourceCode}</h3>
+                                <p className="text-center mb-4">{t.currentCodeVersion} {t.version}</p>
+                                <button onClick={() => window.open('https://github.com/', '_blank')} className="bg-blue-500 text-white p-2 rounded mb-4 block mx-auto">{t.openGithub}</button>
+                                <button onClick={() => setSourceCodeDialogOpen(false)} className="bg-red-500 text-white p-2 rounded block mx-auto">{t.close}</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {languagesDialogOpen && (
+                        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-8 rounded shadow-md w-96 h-96 overflow-y-auto">
+                                <h3 className="text-xl font-bold text-center mb-4">{t.languages}</h3>
+                                <ul>
+                                    {languages.map(lang => (
+                                        <li key={lang.code} className="flex justify-between items-center mb-2">
+                                            <span>{lang.name}</span>
+                                            {language === lang.code && <i className="fas fa-check text-green-500"></i>}
+                                            {language !== lang.code && <button onClick={() => changeLanguage(lang.code)} className="text-blue-500">Select</button>}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button onClick={() => setLanguagesDialogOpen(false)} className="bg-red-500 text-white p-2 rounded block mx-auto mt-4">{t.close}</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {supportDialogOpen && (
+                        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+                            <div className="bg-white p-8 rounded shadow-md w-96">
+                                <h4 className="text-lg font-bold text-center mb-4">{t.supportEasy}</h4>
+                                <h5 className="text-center mb-4">{t.supportText}</h5>
+                                <button onClick={() => window.open('https://www.patreon.com/', '_blank')} className="bg-blue-500 text-white p-2 rounded mb-4 block mx-auto">
+                                    <i className="fas fa-coffee mr-2"></i>{t.supportPatreon}
+                                </button>
+                                <button onClick={() => setSupportDialogOpen(false)} className="bg-red-500 text-white p-2 rounded block mx-auto">{t.close}</button>
+                            </div>
+                        </div>
+                    )}
+
+                    <main className="mt-8">
+                        <h2 className="text-2xl font-bold mb-4">{t.convertFrom}</h2>
+                        <div className="flex items-center mb-4">
+                            <select value={convertFrom} onChange={(e) => setConvertFrom(e.target.value)} className="border p-2 mr-4">
+                                <option value="INFIX">INFIX</option>
+                                <option value="PREFIX">PREFIX</option>
+                                <option value="POSTFIX">POSTFIX</option>
+                            </select>
+                            <span className="mr-4">{t.to}</span>
+                            <select value={convertTo} onChange={(e) => setConvertTo(e.target.value)} className="border p-2">
+                                <option value="INFIX">INFIX</option>
+                                <option value="PREFIX">PREFIX</option>
+                                <option value="POSTFIX">POSTFIX</option>
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-2">{t.enterExpression}</label>
+                            <input type="text" value={expression} onChange={(e) => setExpression(e.target.value)} className="border p-2 w-full" placeholder={t.enterExpression} />
+                        </div>
+                        <button onClick={handleConvert} className="bg-blue-500 text-white p-2 rounded">{t.convert}</button>
+                        <div className="mt-4">
+                            <h3 className="text-xl font-bold">{t.output}</h3>
+                            <textarea className="border p-2 w-full h-16 mt-2" value={output} readOnly placeholder={t.output}></textarea>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
